@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser } from './userAction';
+import { loginUser } from './userAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 
@@ -20,38 +20,37 @@ const initialState = {
   success: false
 };
 
-const userSlice = createSlice({
-  name: 'user',
+const loginSlice = createSlice({
+  name: 'authenticated_user',
   initialState,
   reducers: {
-    logoutR: () => {
+    logoutL: () => {
       return initialState;
     }
   },
   extraReducers: {
-    // register user
-    [registerUser.pending]: (state) => {
-      console.log('reg.pending');
+    // login user
+    [loginUser.pending]: (state) => {
+      console.log('login.pending');
       state.loading = true;
       state.error = null;
     },
-    [registerUser.fulfilled]: (state, { payload }) => {
-      console.log('reg.fulfill');
+    [loginUser.fulfilled]: (state, { payload }) => {
+      console.log('login.fulfill');
       console.log('State ', state);
       console.log('payload ', payload);
       state.loading = false;
-      state.success = true; // registration successful
+      state.success = true; // login successful
       state.userInfo = payload;
       state.userToken = payload.userToken;
       state.refresh_token = payload.refresh_token;
     },
-    [registerUser.rejected]: (state, { payload }) => {
-      console.log('reg.rejected');
+    [loginUser.rejected]: (state, { payload }) => {
+      console.log('login.rejected');
       state.loading = false;
       state.error = payload;
     }
   }
 });
-
-export const { logoutR } = userSlice.actions;
-export default userSlice.reducer;
+export const { logoutL } = loginSlice.actions;
+export default loginSlice.reducer;
